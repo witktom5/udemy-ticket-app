@@ -1,4 +1,8 @@
-# Getting Started with Create React App and Redux
+# Ticket Service App
+
+This comes from the React Front To Back 2022 Udemy course by Brad Traversy. It is a full stack app. It is made using the MERN stack (MongoDB, Express, React, NodeJS).
+
+## Getting Started with Create React App and Redux
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
