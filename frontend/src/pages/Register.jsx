@@ -12,13 +12,18 @@ function Register() {
 
   const { name, email, password, password2 } = formData;
 
-  const onSubmit = (e) => {};
-
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (password !== password2) {
+      toast.error('Passwords do not match');
+    }
   };
 
   return (
@@ -40,6 +45,7 @@ function Register() {
               value={name}
               onChange={onChange}
               placeholder='Enter your name'
+              required
             />
           </div>
           <div className='form-group'>
@@ -51,6 +57,7 @@ function Register() {
               value={email}
               onChange={onChange}
               placeholder='Enter your email'
+              required
             />
           </div>
           <div className='form-group'>
@@ -62,6 +69,7 @@ function Register() {
               value={password}
               onChange={onChange}
               placeholder='Enter your password'
+              required
             />
           </div>
           <div className='form-group'>
@@ -73,6 +81,7 @@ function Register() {
               value={password2}
               onChange={onChange}
               placeholder='Confirm your password'
+              required
             />
           </div>
           <div className='form-group'>
