@@ -1,4 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
+const bcrypt = require('bcryptjs');
+const User = require('../models/userModel');
 
 // Register a new user
 // /api/users
@@ -12,7 +14,32 @@ module.exports.registerUser = catchAsync(async (req, res) => {
     throw new Error('Please fill all fields');
   }
 
-  res.send('Register route');
+  // Find if user already exists
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    res.status(400);
+    throw new Error('User already exists');
+  }
+
+  // Hash password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  console.log(hashedPassword);
+
+  // Create user
+
+  const user = await User.create({ name, email, password: hashedPassword });
+
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid user data');
+  }
 });
 
 // Login a user
@@ -20,5 +47,19 @@ module.exports.registerUser = catchAsync(async (req, res) => {
 // Public
 
 module.exports.loginUser = catchAsync(async (req, res) => {
-  res.send('Login route');
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  // Check password
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+    res.status(401);
+    throw new Error('Invalid email or password');
+  }
 });
