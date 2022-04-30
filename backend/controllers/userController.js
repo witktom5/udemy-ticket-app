@@ -1,5 +1,7 @@
 const catchAsync = require('../utils/catchAsync');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/userModel');
 
 // Register a new user
@@ -35,6 +37,7 @@ module.exports.registerUser = catchAsync(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -57,9 +60,25 @@ module.exports.loginUser = catchAsync(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id),
     });
   } else {
     res.status(401);
     throw new Error('Invalid email or password');
   }
 });
+
+// Generate token
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: '30d',
+  });
+};
+
+// Get logged user data
+// /api/users/me
+// Private
+
+module.exports.getMe = (req, res) => {
+  res.send('me');
+};
