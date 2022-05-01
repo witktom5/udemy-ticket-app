@@ -1,5 +1,4 @@
 const catchAsync = require('../utils/catchAsync');
-const jwt = require('jsonwebtoken');
 
 const User = require('../models/userModel');
 const Ticket = require('../models/ticketModel');
