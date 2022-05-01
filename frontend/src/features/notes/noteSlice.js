@@ -33,10 +33,10 @@ export const getNotes = createAsyncThunk(
 
 export const createNote = createAsyncThunk(
   'notes/create',
-  async (noteData, thunkAPI) => {
+  async ({ noteText, ticketId }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await noteService.createNote(noteData, token);
+      return await noteService.createNote(noteText, ticketId, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -66,6 +66,19 @@ export const noteSlice = createSlice({
         state.notes = action.payload;
       })
       .addCase(getNotes.rejected, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload;
+        state.isError = true;
+      })
+      .addCase(createNote.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createNote.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.notes = [...state.notes, action.payload];
+      })
+      .addCase(createNote.rejected, (state, action) => {
         state.isLoading = false;
         state.message = action.payload;
         state.isError = true;
