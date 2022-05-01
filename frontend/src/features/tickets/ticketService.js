@@ -1,26 +1,22 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import ticketService from ('./ticketService')
+import axios from 'axios';
 
-const initialState = {
-    tickets: [],
-    ticket: {},
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
-    message: ''
-}
+const API_URL = '/api/tickets';
 
-export const ticketSlice = createSlice({
-    name: 'ticket',
-    initialState,
-    reducers: {
-        reset: (state) => initialState
+// Create new ticket
+
+const createTicket = async (ticketData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-    extraReducers: (builder) => {
+  };
 
-    },
+  const response = await axios.post(API_URL, ticketData, config);
+  return response.data;
+};
 
-})
+const ticketService = {
+  createTicket,
+};
 
-export const {reset} = ticketSlice.actions
-export default ticketSlice.reducer
+export default ticketService;
