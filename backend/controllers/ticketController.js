@@ -107,15 +107,12 @@ module.exports.deleteTicket = catchAsync(async (req, res) => {
 });
 
 // Update a ticket
-// PATCH /api/tickets/me
+// PATCH /api/tickets/:id
 // Private
 
 module.exports.updateTicket = catchAsync(async (req, res) => {
-  const { product, description } = req.body;
-  if (!product || !description) {
-    res.status(400);
-    throw new Error('Please add a product and description');
-  }
+  const { product, description, status } = req.body;
+
   // Get user using the id in JWT
   const user = await User.findById(req.user.id);
   if (!user) {
@@ -135,10 +132,11 @@ module.exports.updateTicket = catchAsync(async (req, res) => {
     throw new Error('Unauthorized');
   }
 
-  ticket.product = product;
-  ticket.description = description;
-  ticket.new = true;
-  await ticket.save();
+  const updatedTicket = await Ticket.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
 
-  res.status(201).json({ success: true }, ticket);
+  res.status(201).json({ updatedTicket });
 });
