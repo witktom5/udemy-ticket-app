@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 8000;
 const { errorHandler } = require('./middleware/errorHandler');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
+const ticketRoutes = require('./routes/ticketRoutes');
 
 // Connect to mongodb
 connectDB();
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 app.use(errorHandler);
 
